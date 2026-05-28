@@ -186,6 +186,7 @@ const Map = () => {
     } catch (err) {
       // swallow storage errors but log for debugging
       // eslint-disable-next-line no-console
+      //
       console.error("Failed to save run", err);
     }
   };
