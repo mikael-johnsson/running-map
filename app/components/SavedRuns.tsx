@@ -41,7 +41,7 @@ export default function SavedRuns({ onLoad }: { onLoad: (run: Run) => void }) {
 
   if (!runs || runs.length === 0) {
     return (
-      <div className="pointer-events-auto absolute left-3 top-30 z-20 w-64 rounded-lg border border-black/10 bg-white/90 p-2 text-sm shadow">
+      <div className="pointer-events-auto absolute left-3 top-40 z-20 w-64 rounded-lg border border-black/10 bg-white/90 p-2 text-sm shadow">
         <div className="font-medium">Saved runs</div>
         <div className="mt-2 text-xs text-gray-500">No saved runs</div>
       </div>
@@ -49,7 +49,7 @@ export default function SavedRuns({ onLoad }: { onLoad: (run: Run) => void }) {
   }
 
   return (
-    <div className="pointer-events-auto absolute left-3 top-30 z-20 w-64 rounded-lg border border-black/10 bg-white/90 p-2 text-sm shadow">
+    <div className="pointer-events-auto absolute left-3 top-40 z-20 w-64 rounded-lg border border-black/10 bg-white/90 p-2 text-sm shadow">
       <div className="font-medium">Saved runs</div>
       <div className="mt-2 space-y-2 max-h-60 overflow-auto">
         {runs.map((r) => (
