@@ -182,7 +182,7 @@ const Map = () => {
       localStorage.setItem("runs", JSON.stringify(runs));
       window.dispatchEvent(new Event("runsUpdated"));
       setJustSaved(true);
-      setTimeout(() => setJustSaved(false), 2000);
+      setTimeout(() => setJustSaved(false), 3500);
     } catch (err) {
       // swallow storage errors but log for debugging
       // eslint-disable-next-line no-console
@@ -194,9 +194,9 @@ const Map = () => {
     <div className="relative h-full w-screen">
       <div ref={containerRef} className="h-full w-full" />
 
-      <div className="pointer-events-none absolute left-3 top-3 z-10 w-[min(320px,calc(100%-24px))] rounded-lg border border-black/10 bg-white/90 p-3 text-sm shadow backdrop-blur">
+      <div className="pointer-events-none absolute left-3 top-3 z-10 w-[min(350px,calc(100%-24px))] rounded-lg border border-black/10 bg-white/90 p-3 text-sm shadow backdrop-blur">
         <div className="flex items-start justify-between gap-3">
-          <div className="font-medium">Measurement (v2)</div>
+          <div className="font-medium">Current run</div>
           {justSaved && (
             <div className="ml-2 rounded-full bg-green-500 px-2 py-0.5 text-xs text-white">
               Saved
