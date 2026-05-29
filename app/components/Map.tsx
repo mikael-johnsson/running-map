@@ -51,6 +51,7 @@ const Map = () => {
   const pointsRef = useRef<LngLat[]>([]);
   const syncMeasurementSourceRef = useRef<(() => void) | null>(null);
   const [justSaved, setJustSaved] = useState(false);
+  const [containerReady, setContainerReady] = useState(false);
 
   const formattedDistance = useMemo(() => {
     if (points.length < 2) return "";
@@ -58,6 +59,29 @@ const Map = () => {
   }, [points]);
 
   useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const updateContainerSize = () => {
+      const rect = container.getBoundingClientRect();
+      setContainerReady(rect.width > 0 && rect.height > 0);
+      mapRef.current?.resize();
+    };
+
+    updateContainerSize();
+
+    const observer = new ResizeObserver(updateContainerSize);
+    observer.observe(container);
+    window.addEventListener("resize", updateContainerSize);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", updateContainerSize);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!containerReady) return;
     if (!containerRef.current) return;
     if (mapRef.current) return;
 
@@ -69,10 +93,6 @@ const Map = () => {
     });
 
     map.addControl(new maplibregl.NavigationControl({ showCompass: true }));
-
-    const resizeMap = () => {
-      map.resize();
-    };
 
     const syncMeasurementSource = () => {
       const source = measurementSourceRef.current;
@@ -131,17 +151,11 @@ const Map = () => {
         });
       }
 
-      // If the user managed to set state before the style finished loading,
-      // ensure the rendered layers catch up as soon as the source exists.
       syncMeasurementSource();
+      map.resize();
     };
 
     map.on("load", handleLoad);
-    window.addEventListener("resize", resizeMap);
-
-    requestAnimationFrame(() => {
-      map.resize();
-    });
 
     const handleClick = (e: maplibregl.MapMouseEvent) => {
       const nextPoint: LngLat = { lng: e.lngLat.lng, lat: e.lngLat.lat };
@@ -155,7 +169,6 @@ const Map = () => {
     mapRef.current = map;
 
     return () => {
-      window.removeEventListener("resize", resizeMap);
       map.off("click", handleClick);
       map.off("load", handleLoad);
       mapRef.current?.remove();
@@ -163,7 +176,7 @@ const Map = () => {
       measurementSourceRef.current = null;
       syncMeasurementSourceRef.current = null;
     };
-  }, []);
+  }, [containerReady]);
 
   const clear = () => {
     pointsRef.current = [];
@@ -202,8 +215,8 @@ const Map = () => {
   };
 
   return (
-    <div className="absolute inset-0">
-      <div ref={containerRef} className="absolute inset-0" />
+    <div className="relative h-full w-full">
+      <div ref={containerRef} className="h-full w-full" />
 
       <div className="pointer-events-none absolute left-3 right-3 top-3 z-10 w-[min(350px,calc(100%-24px))] rounded-lg border border-black/10 bg-white/90 p-3 text-sm shadow backdrop-blur sm:left-3 sm:right-auto sm:w-[min(350px,calc(100%-24px))]">
         <div className="flex flex-col gap-3">
