@@ -54,7 +54,7 @@ export default function SavedRuns({ onLoad }: { onLoad: (run: Run) => void }) {
 
   if (!runs || runs.length === 0) {
     return (
-      <div className="pointer-events-auto absolute left-3 top-40 z-20 w-64 rounded-lg border border-black/10 bg-white/90 p-2 text-sm shadow">
+      <div className="pointer-events-auto absolute left-3 right-3 top-40 z-20 w-64 rounded-lg border border-black/10 bg-white/90 p-2 text-sm shadow sm:left-3 sm:right-auto">
         <div className="font-medium">Saved runs</div>
         <div className="mt-2 text-xs text-gray-500">No saved runs</div>
       </div>
@@ -62,14 +62,11 @@ export default function SavedRuns({ onLoad }: { onLoad: (run: Run) => void }) {
   }
 
   return (
-    <div className="pointer-events-auto absolute left-3 top-40 z-20 w-64 rounded-lg border border-black/10 bg-white/90 p-2 text-sm shadow">
+    <div className="pointer-events-auto absolute left-3 right-3 top-40 z-20 w-64 rounded-lg border border-black/10 bg-white/90 p-2 text-sm shadow sm:left-3 sm:right-auto">
       <div className="font-medium">Saved runs</div>
       <div className="mt-2 space-y-2 max-h-60 overflow-auto">
         {runs.map((r) => (
-          <div
-            key={r.id}
-            className="rounded px-2 py-1 hover:bg-black/5"
-          >
+          <div key={r.id} className="rounded px-2 py-1 hover:bg-black/5">
             <div className="flex items-start justify-between gap-2">
               <button
                 type="button"

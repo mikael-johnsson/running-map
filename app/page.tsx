@@ -2,9 +2,9 @@ import Map from "./components/Map";
 
 export default function Home() {
   return (
-    <main className="flex-1">
-      <h1 className="text-2xl p-4 font-bold">Cornelias running map</h1>
-      <div className="h-screen overflow-hidden rounded-xl flex">
+    <main className="flex min-h-dvh flex-col">
+      <h1 className="shrink-0 p-4 text-2xl font-bold">Cornelias running map</h1>
+      <div className="relative min-h-0 flex-1 overflow-hidden rounded-xl">
         <Map />
       </div>
     </main>

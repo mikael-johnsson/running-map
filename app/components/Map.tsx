@@ -70,6 +70,10 @@ const Map = () => {
 
     map.addControl(new maplibregl.NavigationControl({ showCompass: true }));
 
+    const resizeMap = () => {
+      map.resize();
+    };
+
     const syncMeasurementSource = () => {
       const source = measurementSourceRef.current;
       if (!source) return;
@@ -133,6 +137,11 @@ const Map = () => {
     };
 
     map.on("load", handleLoad);
+    window.addEventListener("resize", resizeMap);
+
+    requestAnimationFrame(() => {
+      map.resize();
+    });
 
     const handleClick = (e: maplibregl.MapMouseEvent) => {
       const nextPoint: LngLat = { lng: e.lngLat.lng, lat: e.lngLat.lat };
@@ -146,6 +155,7 @@ const Map = () => {
     mapRef.current = map;
 
     return () => {
+      window.removeEventListener("resize", resizeMap);
       map.off("click", handleClick);
       map.off("load", handleLoad);
       mapRef.current?.remove();
@@ -192,18 +202,20 @@ const Map = () => {
   };
 
   return (
-    <div className="relative h-full w-screen">
-      <div ref={containerRef} className="h-full w-full" />
+    <div className="absolute inset-0">
+      <div ref={containerRef} className="absolute inset-0" />
 
-      <div className="pointer-events-none absolute left-3 top-3 z-10 w-[min(350px,calc(100%-24px))] rounded-lg border border-black/10 bg-white/90 p-3 text-sm shadow backdrop-blur">
-        <div className="flex items-start justify-between gap-3">
-          <div className="font-medium">Current run</div>
-          {justSaved && (
-            <div className="ml-2 rounded-full bg-green-500 px-2 py-0.5 text-xs text-white">
-              Saved
-            </div>
-          )}
-          <div className="flex gap-2">
+      <div className="pointer-events-none absolute left-3 right-3 top-3 z-10 w-[min(350px,calc(100%-24px))] rounded-lg border border-black/10 bg-white/90 p-3 text-sm shadow backdrop-blur sm:left-3 sm:right-auto sm:w-[min(350px,calc(100%-24px))]">
+        <div className="flex flex-col gap-3">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className="font-medium">Current run</div>
+            {justSaved && (
+              <div className="rounded-full bg-green-500 px-2 py-0.5 text-xs text-white">
+                Saved
+              </div>
+            )}
+          </div>
+          <div className="flex flex-wrap gap-2">
             <button
               type="button"
               onClick={undo}
