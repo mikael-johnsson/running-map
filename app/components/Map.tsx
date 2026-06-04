@@ -208,6 +208,7 @@ const Map = () => {
       window.dispatchEvent(new Event("runsUpdated"));
       setJustSaved(true);
       setTimeout(() => setJustSaved(false), 3500);
+      setCurrentRunName("");
     } catch (err) {
       // swallow storage errors but log for debugging
       // eslint-disable-next-line no-console
@@ -219,7 +220,6 @@ const Map = () => {
   return (
     <div className="relative h-full w-full">
       <div ref={containerRef} className="h-full w-full" />
-
       <div className="pointer-events-none absolute left-3 right-3 top-3 z-10 w-[min(350px,calc(100%-24px))] rounded-lg border border-black/10 bg-white/90 p-3 text-sm shadow backdrop-blur sm:left-3 sm:right-auto sm:w-[min(350px,calc(100%-24px))]">
         <div className="flex flex-col gap-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
