@@ -8,6 +8,7 @@ type Run = {
   id: number;
   createdAt: string;
   points: LngLat[];
+  name: string;
 };
 
 export default function SavedRuns({ onLoad }: { onLoad: (run: Run) => void }) {
@@ -62,7 +63,7 @@ export default function SavedRuns({ onLoad }: { onLoad: (run: Run) => void }) {
   }
 
   return (
-    <div className="pointer-events-auto absolute left-3 right-3 top-40 z-20 w-64 rounded-lg border border-black/10 bg-white/90 p-2 text-sm shadow sm:left-3 sm:right-auto">
+    <div className="pointer-events-auto absolute left-3 right-3 top-50 z-20 w-64 rounded-lg border border-black/10 bg-white/90 p-2 text-sm shadow sm:left-3 sm:right-auto">
       <div className="font-medium">Saved runs</div>
       <div className="mt-2 space-y-2 max-h-60 overflow-auto">
         {runs.map((r) => (
@@ -73,6 +74,7 @@ export default function SavedRuns({ onLoad }: { onLoad: (run: Run) => void }) {
                 onClick={() => onLoad(r)}
                 className="min-w-0 flex-1 text-left"
               >
+                <div className="font-medium">{r.name}</div>
                 <div className="text-xs text-gray-700">
                   {new Date(r.createdAt).toLocaleString()}
                 </div>

@@ -3,7 +3,6 @@
 import maplibregl, { type Map as MapLibreMap } from "maplibre-gl";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
-  distanceMeters,
   formatDistance,
   polylineDistanceMeters,
   type LngLat,
@@ -52,6 +51,8 @@ const Map = () => {
   const syncMeasurementSourceRef = useRef<(() => void) | null>(null);
   const [justSaved, setJustSaved] = useState(false);
   const [containerReady, setContainerReady] = useState(false);
+  const [openSaveRun, setOpenSaveRun] = useState(false);
+  const [currentRunName, setCurrentRunName] = useState("");
 
   const formattedDistance = useMemo(() => {
     if (points.length < 2) return "";
@@ -198,6 +199,7 @@ const Map = () => {
       const runs = raw ? JSON.parse(raw) : [];
       const run = {
         id: Date.now(),
+        name: currentRunName,
         createdAt: new Date().toISOString(),
         points: pointsRef.current,
       };
@@ -228,30 +230,63 @@ const Map = () => {
               </div>
             )}
           </div>
-          <div className="flex flex-wrap gap-2">
-            <button
-              type="button"
-              onClick={undo}
-              disabled={points.length === 0}
-              className="pointer-events-auto rounded-md bg-black/5 px-2 py-1 text-xs hover:bg-black/10 disabled:opacity-40"
-            >
-              Undo
-            </button>
-            <button
-              type="button"
-              onClick={saveRun}
-              disabled={points.length < 2}
-              className="pointer-events-auto rounded-md bg-black/5 px-2 py-1 text-xs hover:bg-black/10 disabled:opacity-40"
-            >
-              Save
-            </button>
-            <button
-              type="button"
-              onClick={clear}
-              className="pointer-events-auto rounded-md bg-black/5 px-2 py-1 text-xs hover:bg-black/10"
-            >
-              Clear
-            </button>
+          <div>
+            {!openSaveRun && (
+              <div className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={undo}
+                  disabled={points.length === 0}
+                  className="pointer-events-auto rounded-md bg-black/5 px-2 py-1 text-xs hover:bg-black/10 disabled:opacity-40"
+                >
+                  Undo
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setOpenSaveRun(!openSaveRun)}
+                  disabled={points.length < 2}
+                  className={`${openSaveRun ? "none" : "block"} pointer-events-auto rounded-md bg-black/5 px-2 py-1 text-xs hover:bg-black/10 disabled:opacity-40`}
+                >
+                  Save
+                </button>
+                <button
+                  type="button"
+                  onClick={clear}
+                  className="pointer-events-auto rounded-md bg-black/5 px-2 py-1 text-xs hover:bg-black/10"
+                >
+                  Clear
+                </button>
+              </div>
+            )}
+
+            {openSaveRun && (
+              <div className="pointer-events-auto flex gap-1">
+                <input
+                  type="text"
+                  placeholder="Run name"
+                  className="pointer-events-auto rounded-md border border-black/10 p-2"
+                  value={currentRunName}
+                  onChange={(e) => setCurrentRunName(e.target.value)}
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    saveRun();
+                    setOpenSaveRun(false);
+                  }}
+                  className="pointer-events-auto rounded-md bg-black/5 px-2 py-1 text-xs hover:bg-black/10 disabled:opacity-40"
+                >
+                  Confirm save
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setOpenSaveRun(false)}
+                  className="pointer-events-auto rounded-md bg-black/5 px-2 py-1 text-xs hover:bg-black/10 disabled:opacity-40"
+                >
+                  Cancel
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
